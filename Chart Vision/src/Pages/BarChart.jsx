@@ -1,7 +1,16 @@
 import React, { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+} from "recharts";
 import { sampleData } from "../data";
 
 export default function BarChartPage() {
@@ -11,10 +20,13 @@ export default function BarChartPage() {
   const data = useMemo(() => {
     try {
       if (location.state && location.state.source === "sample") return sampleData;
+
       const raw = localStorage.getItem("chartData");
       if (!raw) return sampleData;
+
       const parsed = JSON.parse(raw);
       if (!Array.isArray(parsed) || parsed.length === 0) return sampleData;
+
       return parsed.map((r) => ({
         month: r.label,
         users: Number(r.users),
@@ -27,30 +39,70 @@ export default function BarChartPage() {
   }, [location.state]);
 
   return (
-    <div className="min-h-screen bg-gray-800 text-white p-6">
-      <div onClick={() => navigate("/dashboard")} className="flex items-center gap-2 cursor-pointer mb-6 hover:text-sky-300">
-        <IoMdArrowRoundBack className="text-2xl" />
-        <span className="text-lg font-semibold">Back to Dashboard</span>
+    <div className="min-h-screen bg-gray-800 text-white p-4 sm:p-6">
+
+      <div
+        onClick={() => navigate("/dashboard")}
+        className="flex items-center gap-2 cursor-pointer mb-6 hover:text-sky-300 w-fit"
+      >
+        <IoMdArrowRoundBack className="text-xl sm:text-2xl" />
+        <span className="text-base sm:text-lg font-semibold">
+          Back to Dashboard
+        </span>
       </div>
 
-      <h1 className="text-3xl font-bold mb-2">Bar Chart — Users vs Sales</h1>
-      <p className="text-sm text-slate-400 mb-6">Grouped bar chart comparing users and sales by month.</p>
+      <h1 className="text-2xl sm:text-3xl font-bold mb-2">
+        Bar Chart — Users vs Sales
+      </h1>
 
-      <div className="bg-slate-800 rounded-xl p-4 shadow-lg h-[26.25rem]">
+      <p className="text-xs sm:text-sm text-slate-400 mb-6">
+        Grouped bar chart comparing users and sales by month.
+      </p>
+
+      <div className="bg-slate-800 rounded-xl p-3 sm:p-4 shadow-lg h-[20rem] sm:h-[24rem] md:h-[26.25rem] overflow-hidden">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+          <BarChart
+            data={data}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
             <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-            <XAxis dataKey="month" stroke="#94a3b8" tick={{ fill: "#cbd5e1" }} />
+
+            <XAxis
+              dataKey="month"
+              stroke="#94a3b8"
+              tick={{ fill: "#cbd5e1" }}
+            />
+
             <YAxis stroke="#94a3b8" tick={{ fill: "#cbd5e1" }} />
+
             <Tooltip
               cursor={{ fill: "rgba(56,189,248,0.06)" }}
-              contentStyle={{ backgroundColor: "#0b1220", borderRadius: 8, border: "1px solid #334155" }}
+              contentStyle={{
+                backgroundColor: "#0b1220",
+                borderRadius: 8,
+                border: "1px solid #334155",
+              }}
               labelStyle={{ color: "#38bdf8", fontWeight: 600 }}
               itemStyle={{ color: "#e6eef8" }}
             />
+
             <Legend wrapperStyle={{ color: "#cbd5e1" }} />
-            <Bar dataKey="users" name="Users" fill="#38bdf8" barSize={22} radius={[6,6,0,0]} />
-            <Bar dataKey="sales" name="Sales" fill="#a855f7" barSize={22} radius={[6,6,0,0]} />
+
+            <Bar
+              dataKey="users"
+              name="Users"
+              fill="#38bdf8"
+              barSize={22}
+              radius={[6, 6, 0, 0]}
+            />
+
+            <Bar
+              dataKey="sales"
+              name="Sales"
+              fill="#a855f7"
+              barSize={22}
+              radius={[6, 6, 0, 0]}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
